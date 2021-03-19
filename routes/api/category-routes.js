@@ -8,8 +8,19 @@ const { Category, Product } = require('../../models');
 router.get('/', async (req, res) => {
   try {
     const categoryData = await Category.findAll({
-      include: [{ model: ProductTag }, { model: Product }],
+      include: [
+        { 
+          model: Product,
+          attributes: [
+           'name',
+           'price',
+           'stock',
+           'tag_id',
+          ],
+        },
+      ],
     });
+
     res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
@@ -36,26 +47,34 @@ router.get('/', async (req, res) => {
   // create a new category
   router.post('/', async (req, res) => {
     try {
-      const readerData = await Reader.create(req.body);
-      res.status(200).json(readerData);
+      const categoryData = await Category.create(req.body);
+      res.status(200).json(categoryData);
     } catch (err) {
       res.status(400).json(err);
     }
   });
 
-router.put('/:id', (req, res) => {
+// router.put('/:id', (req, res) => {
   // update a category by its `id` value
-
-
-
-
-
-  
-
-
-
-
-});
+  router.put('/:catagory_id', (req, res) => {
+    Category.update(
+      {
+        name: req.body.name,
+      },
+      {
+        where: {
+          category_id: req.params.catgory_id,
+        },
+      }
+    )
+      .then((updatedCategory) => {
+        res.json(updatedCategory);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json(err);
+      });
+  });
 
   // delete a category by its `id` value
   router.delete('/:id', async (req, res) => {

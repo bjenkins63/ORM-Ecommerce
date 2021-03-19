@@ -1,75 +1,91 @@
 const router = require('express').Router();
-const { Tag, Product, ProductTag } = require('../../models');
-
-// The `/api/tags` endpoint
+const { Tag, Product } = require('../../models');
 
   // find all tags
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const ProductTag = await Tag.findAll({
-      // Add Product as a second model to JOIN with
-      include: [{ model: ProductTag }, { model: Product }],
+    const tagData = await Tag.findAll({
+      include: [{ model: Product }],
     });
     res.status(200).json(productTagData);
   } catch (err) {
     res.status(500).json(err);
   }
 });
-  // be sure to include its associated Product data
-router.get('/:id', (req, res) => {
+
+
+router.get('/:id', async (req, res) => {
   // find a single tag by its `id`
   // be sure to include its associated Product data
   try {
-    const ProductTag = await ProductTags.findByPk(req.params.id, {
-      include: [{ model: productTag }, { model: Product }],
+    const tagData = await Tag.findByPk(req.params.id, {
+      include: [ { model: Product } ],
     });
 
-    if (!productTagId) {
+    if (!tagId) {
       res.status(404).json({ message: 'No product tag found with that id!' });
       return;
     }
 
-    res.status(200).json(productTagId);
+    res.status(200).json(tagId);
   } catch (err) {
     res.status(500).json(err);
   }
 });
+
   // create a new tag
   router.post('/', async (req, res) => {
     try {
-      const productTag = await ProductTag.create(req.body);
-      res.status(200).json(productTagData);
+      const tagData = await Tag.create( {
+        category_id: req.body.category_id,
+      });
+      res.status(200).json(tagData);
     } catch (err) {
       res.status(400).json(err);
     }
   });
 
-router.put('/:id', (req, res) => {
+// router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
+  router.put('/:tag_id', (req, res) => {
+    //Calls the update method on the Book model
+    productTag.update(
+      {
+        // All the fields you can update and the data attached to the request body.
+        product_id: req.body.product_id,
+        tag_id: req.body.tag_id,
+      },
+      {
+        where: {
+          productTag_id: req.params.productTag_id,
+        },
+      }
+    )
+      .then((updatedproductTag) => {
+        res.json(updatedproductTag);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json(err);
+      });
+  });
 
+// });
 
-
-
-  
-
-
-  
-});
-
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete on tag by its `id` value
   try {
-    const productTagData = await ProductTag.destroy({
+    const tagData = await Tag.destroy({
       where: {
         id: req.params.id,
       },
     });
 
-    if (!productTagData) {
+    if (!tagData) {
       res.status(404).json({ message: 'No product tag found with that id!' });
       return;
     }
-    res.status(200).json(productTagData);
+    res.status(200).json(tagData);
   } catch (err) {
     res.status(500).json(err);
   }
