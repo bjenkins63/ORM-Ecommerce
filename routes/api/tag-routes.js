@@ -20,7 +20,7 @@ router.get('/:id', async (req, res) => {
   // find a single tag by its `id`
   // be sure to include its associated Product data
   try {
-    const tagData = await Tag.findByPk(req.params.id, {
+    const Tag = await Tag.findByPk(req.params.id, {
       include: [{ 
         model: Product,
         attributes: ["product_name"],
@@ -41,14 +41,14 @@ router.get('/:id', async (req, res) => {
   // create a new tag
   router.post('/', async (req, res) => {
     try {
-      const neTag = await Tag.create(req.body);
+      const Tag = await Tag.create(req.body);
       res.status(200).json(tagData);
     } catch (err) {
       res.status(400).json(err);
     }
   });
 
-  router.put('/:id', (req, res) => {
+  router.put('/:id', async (req, res) => {
     //Calls the update method on the Book model
     try {
       const tagData = await Tag.update(req.body, {
