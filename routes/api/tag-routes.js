@@ -2,14 +2,10 @@ const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
 
   // find all tags
+
 router.get('/', async (req, res) => {
   try {
-    const tagData = await Tag.findAll({
-      include: [{ 
-        model: Product,
-        attributes: ["product_name"],
-     }]
-    });
+    const tagData = await Tag.findAll();
     res.status(200).json(tagData);
   } catch (err) {
     res.status(500).json(err);
@@ -17,22 +13,13 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
   try {
-    const Tag = await Tag.findByPk(req.params.id, {
-      include: [{ 
-        model: Product,
-        attributes: ["product_name"],
-     }]
-    });
-
-    if (!tagId) {
-      res.status(404).json({ message: 'No product tag found with that id!' });
+    const tagData = await Tag.findByPk(req.params.id)
+        if (!tagData) {
+      res.status(404).json({ message: "No tag found with that id!" });
       return;
     }
-
-    res.status(200).json(tagId);
+    res.status(200).json(tagData);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -41,12 +28,12 @@ router.get('/:id', async (req, res) => {
   // create a new tag
   router.post('/', async (req, res) => {
     try {
-      const Tag = await Tag.create(req.body);
-      res.status(200).json(tagData);
-    } catch (err) {
-      res.status(400).json(err);
-    }
-  });
+      const tagData = await Tag.create(req.body);
+          res.status(200).json(tagData);
+        } catch (err) {
+          res.status(400).json(err);
+        }
+      });
 
   router.put('/:id', async (req, res) => {
     //Calls the update method on the Book model
