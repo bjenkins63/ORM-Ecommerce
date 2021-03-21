@@ -25,9 +25,9 @@ _________
 
 ## Screenshots
 
-![](src/xxxxxx.png)
+![](img/Ecommerce.png)
 
-**Above:**  
+**Above: Example of adding a product to database**  
 
 _________
 ## Instruction Video
